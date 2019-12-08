@@ -25,14 +25,8 @@ public class Util {
                 pointDistanceQueue.add(pointDistance);
             }
         }
-        
-        while (!pointDistanceQueue.isEmpty() && knnList.size() < k) {
-            PointDistance pointDistance = pointDistanceQueue.poll();
-            if (pointDistance.getPointId() != knnList.get(knnList.size() - 1).getPointId()) {
-                knnList.add(pointDistance);
-            }
-        }
-        return knnList;
+
+        return Util.createKnnListFromHeap(pointDistanceQueue, k);
     }
 
     public static ArrayList<PointDistance> knnListStringToKnnList(String knnListString) {
@@ -65,5 +59,19 @@ public class Util {
         HashMap<Integer, HashMap<String, Integer>> hashMapObject = (HashMap<Integer, HashMap<String, Integer>>) ois.readObject();
         ois.close();
         return hashMapObject;
+    }
+
+    public static ArrayList<PointDistance> createKnnListFromHeap(PriorityQueue<PointDistance> pointDistanceQueue, int k) {
+        ArrayList<PointDistance> knnList = new ArrayList<>();
+        while (!pointDistanceQueue.isEmpty() && knnList.size() < k) {
+            PointDistance pointDistance = pointDistanceQueue.poll();
+            if (knnList.size() == 0) {
+                knnList.add(pointDistance);
+            }
+            else if (pointDistance.getPointId() != knnList.get(knnList.size() - 1).getPointId()) {
+                knnList.add(pointDistance);
+            }
+        }
+        return knnList;
     }
 }
