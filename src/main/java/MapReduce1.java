@@ -16,14 +16,12 @@ import org.apache.log4j.Logger;
 public class MapReduce1 {
 
     private static final Logger LOG = Logger.getLogger(MapReduce1.class);
-    private static Configuration knnConf;
     private static Integer size;
     private static Integer grain;
 
-    public static void run(String[] args, Configuration knnConf) throws Exception {
-        MapReduce1.knnConf = knnConf;
-        size = Integer.parseInt(knnConf.get("size"));
-        grain = Integer.parseInt(knnConf.get("grain"));
+    public static void run(String[] args) throws Exception {
+        size = Integer.parseInt(KnnMapReduce.knnConf.get("size"));
+        grain = Integer.parseInt(KnnMapReduce.knnConf.get("grain"));
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "knnMapReduce1");
         job.setJarByClass(MapReduce1.class);

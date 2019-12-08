@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class KnnMapReduce {
 
-    private static final Configuration knnConf = new Configuration();
+    public static final Configuration knnConf = new Configuration();
 
     public static void main(String[] args) throws Exception {
         knnConf.set("size", "100");

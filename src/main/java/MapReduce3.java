@@ -19,18 +19,16 @@ import org.apache.log4j.Logger;
 public class MapReduce3 {
 
     private static final Logger LOG = Logger.getLogger(MapReduce3.class);
-    private static Configuration knnConf;
     private static Integer size;
     private static Integer grain;
     private static Integer k;
     private static HashMap<Integer, HashMap<String, Integer>> cellShape;
 
-    public static void run(String[] args, Configuration knnConf, HashMap<Integer, HashMap<String, Integer>> shape) throws Exception {
-        MapReduce3.knnConf = knnConf;
-        size = Integer.parseInt(knnConf.get("size"));
-        grain = Integer.parseInt(knnConf.get("grain"));
+    public static void run(String[] args, HashMap<Integer, HashMap<String, Integer>> shape) throws Exception {
+        size = Integer.parseInt(KnnMapReduce.knnConf.get("size"));
+        grain = Integer.parseInt(KnnMapReduce.knnConf.get("grain"));
         cellShape = shape;
-        k = Integer.parseInt(knnConf.get("k"));
+        k = Integer.parseInt(KnnMapReduce.knnConf.get("k"));
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "knnMapReduce3");
         job.setJarByClass(MapReduce3.class);
