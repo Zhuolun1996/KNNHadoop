@@ -33,7 +33,7 @@ public class CellMerger {
         for (int i = 0; i < grain * grain; i++) {
             if (shape.get(i) != null) {
                 int numberOfPoints = shape.get(i).get("pointsNum");
-                if (numberOfPoints < k) {
+                if (numberOfPoints < k + 1) {
                     int position = checkPosition(i, grain);
                     int totalNum = 0;
                     HashMap<String, Integer> cellInfo = shape.get(i);
