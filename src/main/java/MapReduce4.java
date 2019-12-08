@@ -17,18 +17,9 @@ import org.apache.log4j.Logger;
 public class MapReduce4 {
 
     private static final Logger LOG = Logger.getLogger(MapReduce4.class);
-    private static int size;
-    private static int grain;
-    private static int k;
-    private static HashMap<Integer, HashMap<String, Integer>> cellShape;
 
-    public static void run(String[] args, HashMap<Integer, HashMap<String, Integer>> shape) throws Exception {
-        size = Integer.parseInt(KnnMapReduce.knnConf.get("size"));
-        grain = Integer.parseInt(KnnMapReduce.knnConf.get("grain"));
-        cellShape = shape;
-        k = Integer.parseInt(KnnMapReduce.knnConf.get("k"));
-        Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "knnMapReduce4");
+    public static void run(String[] args) throws Exception {
+        Job job = Job.getInstance(KnnMapReduce.knnConf, "knnMapReduce4");
         job.setJarByClass(MapReduce4.class);
         // Use TextInputFormat, the default unless job.setInputFormatClass is used
         FileInputFormat.addInputPath(job, new Path(args[0] + "/output3/part-r-00000"));
@@ -56,13 +47,14 @@ public class MapReduce4 {
         @Override
         public void reduce(IntWritable pointId, Iterable<Text> knnListTextIterable, Context context)
                 throws IOException, InterruptedException {
+            int k = Integer.parseInt(context.getConfiguration().get("k"));
             ArrayList<PointDistance> knnList = new ArrayList<>();
             PriorityQueue<PointDistance> pointDistanceQueue = new PriorityQueue<>(new Util.PointDistanceComparator());
             for (Text knnListText : knnListTextIterable) {
                 String knnListString = knnListText.toString();
                 pointDistanceQueue.addAll(Util.knnListStringToKnnList(knnListString));
             }
-            while (pointDistanceQueue.size() > MapReduce4.k) {
+            while (pointDistanceQueue.size() > k) {
                 pointDistanceQueue.poll();
             }
             while (!pointDistanceQueue.isEmpty()) {

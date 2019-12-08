@@ -3,7 +3,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.AbstractMap.SimpleEntry;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -19,18 +18,10 @@ import org.apache.log4j.Logger;
 public class MapReduce3 {
 
     private static final Logger LOG = Logger.getLogger(MapReduce3.class);
-    private static int size;
-    private static int grain;
-    private static int k;
-    private static HashMap<Integer, HashMap<String, Integer>> cellShape;
 
-    public static void run(String[] args, HashMap<Integer, HashMap<String, Integer>> shape) throws Exception {
-        size = Integer.parseInt(KnnMapReduce.knnConf.get("size"));
-        grain = Integer.parseInt(KnnMapReduce.knnConf.get("grain"));
-        cellShape = shape;
-        k = Integer.parseInt(KnnMapReduce.knnConf.get("k"));
-        Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "knnMapReduce3");
+
+    public static void run(String[] args) throws Exception {
+        Job job = Job.getInstance(KnnMapReduce.knnConf, "knnMapReduce3");
         job.setJarByClass(MapReduce3.class);
         // Use TextInputFormat, the default unless job.setInputFormatClass is used
         FileInputFormat.addInputPath(job, new Path(args[0] + "/output2/part-r-00000"));
@@ -44,11 +35,11 @@ public class MapReduce3 {
 
 
     public static class Map extends Mapper<LongWritable, Text, IntWritable, Text> {
-        private ArrayList<Entry<Integer, String>> getValueStringList(PointInfo pointInfo) {
+        private ArrayList<Entry<Integer, String>> getValueStringList(PointInfo pointInfo, HashMap<Integer, HashMap<String, Integer>> cellShape) {
             Float maxDistance = pointInfo.getKnnList().get(0).getDistance();
             ArrayList<Entry<Integer, String>> resultList = new ArrayList<>();
             boolean isOverlapped = false;
-            for (Entry<Integer, HashMap<String, Integer>> cell : MapReduce3.cellShape.entrySet()) {
+            for (Entry<Integer, HashMap<String, Integer>> cell : cellShape.entrySet()) {
                 if ((pointInfo.getX() - maxDistance < cell.getValue().get("rightMargin") && pointInfo.getX() >= cell.getValue().get("rightMargin")) || (pointInfo.getX() + maxDistance >= cell.getValue().get("leftMargin") && pointInfo.getX() < cell.getValue().get("leftMargin"))
                         || (pointInfo.getY() - maxDistance < cell.getValue().get("bottomMargin") && pointInfo.getY() >= cell.getValue().get("bottomMargin")) || (pointInfo.getY() + maxDistance >= cell.getValue().get("topMargin") && pointInfo.getY() < cell.getValue().get("topMargin"))) {
                     resultList.add(new SimpleEntry<>(cell.getKey(), pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY() + ";" + pointInfo.getCellId() + ";" + pointInfo.getKnnList().toString() + ";" + "false"));
@@ -66,10 +57,15 @@ public class MapReduce3 {
                 throws IOException, InterruptedException {
             String knnInfoString = knnInfoText.toString();
             PointInfo pointInfo = new PointInfo(knnInfoString, 1);
-            for (Entry<Integer, String> value : getValueStringList(pointInfo)) {
-                context.write(new IntWritable(value.getKey()), new Text(value.getValue()));
+            try {
+                HashMap<Integer, HashMap<String, Integer>> cellShape = Util.deserializeHashMap(context.getConfiguration().get("cellShape"));
+                for (Entry<Integer, String> value : getValueStringList(pointInfo, cellShape)) {
+                    context.write(new IntWritable(value.getKey()), new Text(value.getValue()));
+                }
+                context.write(new IntWritable(pointInfo.getCellId()), new Text(pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY()));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-            context.write(new IntWritable(pointInfo.getCellId()), new Text(pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY()));
         }
     }
 
@@ -77,6 +73,7 @@ public class MapReduce3 {
         @Override
         public void reduce(IntWritable cellId, Iterable<Text> pointInfoIterable, Context context)
                 throws IOException, InterruptedException {
+            int k = Integer.parseInt(context.getConfiguration().get("k"));
             ArrayList<PointInfo> rawPointList = new ArrayList<>();
             ArrayList<PointInfo> knnPointList = new ArrayList<>();
             for (Text pointInfoText : pointInfoIterable) {

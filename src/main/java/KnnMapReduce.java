@@ -13,9 +13,10 @@ public class KnnMapReduce {
         MapReduce1.run(args);
         CellMerger cellMerger = new CellMerger();
         HashMap<Integer, HashMap<String, Integer>> cellShape = cellMerger.mergeCell("knnData/output1/part-r-00000");
-        MapReduce2.run(args, cellShape);
-        MapReduce3.run(args, cellShape);
-        MapReduce4.run(args, cellShape);
+        knnConf.set("cellShape", Util.serializeHashMap(cellShape));
+        MapReduce2.run(args);
+        MapReduce3.run(args);
+        MapReduce4.run(args);
     }
 }
 

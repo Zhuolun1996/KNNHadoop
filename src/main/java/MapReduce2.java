@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -18,18 +17,9 @@ import org.apache.log4j.Logger;
 public class MapReduce2 {
 
     private static final Logger LOG = Logger.getLogger(MapReduce2.class);
-    private static int size;
-    private static int grain;
-    private static int k;
-    private static HashMap<Integer, HashMap<String, Integer>> cellShape;
 
-    public static void run(String[] args, HashMap<Integer, HashMap<String, Integer>> shape) throws Exception {
-        size = Integer.parseInt(KnnMapReduce.knnConf.get("size"));
-        grain = Integer.parseInt(KnnMapReduce.knnConf.get("grain"));
-        cellShape = shape;
-        k = Integer.parseInt(KnnMapReduce.knnConf.get("k"));
-        Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "knnMapReduce2");
+    public static void run(String[] args) throws Exception {
+        Job job = Job.getInstance(KnnMapReduce.knnConf, "knnMapReduce2");
         job.setJarByClass(MapReduce2.class);
         // Use TextInputFormat, the default unless job.setInputFormatClass is used
         FileInputFormat.addInputPath(job, new Path(args[0] + "/input"));
@@ -43,11 +33,11 @@ public class MapReduce2 {
 
 
     public static class Map extends Mapper<LongWritable, Text, IntWritable, Text> {
-        private int getCellIdByCoordinate(String coordinate) {
+        private int getCellIdByCoordinate(String coordinate, HashMap<Integer, HashMap<String, Integer>> cellShape) {
             int x = Integer.parseInt(coordinate.split(",")[1]);
             int y = Integer.parseInt(coordinate.split(",")[2]);
 
-            for (Entry<Integer, HashMap<String, Integer>> cell : MapReduce2.cellShape.entrySet()) {
+            for (Entry<Integer, HashMap<String, Integer>> cell : cellShape.entrySet()) {
                 if ((cell.getValue().get("leftMargin") < x && cell.getValue().get("rightMargin") >= x) && (cell.getValue().get("topMargin") < y && cell.getValue().get("bottomMargin") >= y)) {
                     return cell.getKey();
                 }
@@ -59,7 +49,12 @@ public class MapReduce2 {
         public void map(LongWritable offset, Text coordinateText, Context context)
                 throws IOException, InterruptedException {
             String coordinateString = coordinateText.toString();
-            context.write(new IntWritable(getCellIdByCoordinate(coordinateString)), new Text(coordinateString));
+            try {
+                HashMap<Integer, HashMap<String, Integer>> cellShape = Util.deserializeHashMap(context.getConfiguration().get("cellShape"));
+                context.write(new IntWritable(getCellIdByCoordinate(coordinateString, cellShape)), new Text(coordinateString));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -67,6 +62,7 @@ public class MapReduce2 {
         @Override
         public void reduce(IntWritable cellId, Iterable<Text> pointInfoIterable, Context context)
                 throws IOException, InterruptedException {
+            int k = Integer.parseInt(context.getConfiguration().get("k"));
             ArrayList<PointInfo> pointInfoList = new ArrayList<>();
             for (Text pointInfoText : pointInfoIterable) {
                 pointInfoList.add(new PointInfo(pointInfoText.toString(), 0));

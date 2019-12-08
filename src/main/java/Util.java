@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.io.*;
+import java.util.*;
 
 public class Util {
     public static class PointDistanceComparator implements Comparator<PointDistance> {
@@ -48,5 +47,23 @@ public class Util {
         }
 
         return knnList;
+    }
+
+    public static String serializeHashMap(HashMap<Integer, HashMap<String, Integer>> cellShape) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(cellShape);
+        oos.close();
+        return Base64.getEncoder().encodeToString(baos.toByteArray());
+    }
+
+    public static HashMap<Integer, HashMap<String, Integer>> deserializeHashMap(String hashMapSerializedString) throws IOException,
+            ClassNotFoundException {
+        byte[] data = Base64.getDecoder().decode(hashMapSerializedString);
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+        @SuppressWarnings("unchecked")
+        HashMap<Integer, HashMap<String, Integer>> hashMapObject = (HashMap<Integer, HashMap<String, Integer>>) ois.readObject();
+        ois.close();
+        return hashMapObject;
     }
 }
