@@ -24,7 +24,7 @@ public class MapReduce3 {
         Job job = Job.getInstance(KnnMapReduce.knnConf, "knnMapReduce3");
         job.setJarByClass(MapReduce3.class);
         // Use TextInputFormat, the default unless job.setInputFormatClass is used
-        FileInputFormat.addInputPath(job, new Path(args[0] + "/output2/part-r-00000"));
+        FileInputFormat.addInputPath(job, new Path(args[0] + "/output2"));
         FileOutputFormat.setOutputPath(job, new Path(args[0] + "/output3"));
         job.setMapperClass(Map.class);
         job.setReducerClass(Reduce.class);
