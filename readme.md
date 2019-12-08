@@ -85,4 +85,4 @@ output:
 ```
 
 ### Result
-The result will be saved to `{$DataSourceDirectory}/result`
+The result will be saved to `{$DataSourceDirectory}/output{i}Result`
