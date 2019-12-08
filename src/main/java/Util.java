@@ -23,14 +23,14 @@ public class Util {
                 float distance = getDistance(pointInfo, otherPointInfo);
                 PointDistance pointDistance = new PointDistance(otherPointInfo.getPointId(), distance);
                 pointDistanceQueue.add(pointDistance);
-                if (pointDistanceQueue.size() > k) {
-                    pointDistanceQueue.poll();
-                }
             }
         }
-        while (!pointDistanceQueue.isEmpty()) {
+        
+        while (!pointDistanceQueue.isEmpty() && knnList.size() < k) {
             PointDistance pointDistance = pointDistanceQueue.poll();
-            knnList.add(pointDistance);
+            if (pointDistance.getPointId() != knnList.get(knnList.size() - 1).getPointId()) {
+                knnList.add(pointDistance);
+            }
         }
         return knnList;
     }

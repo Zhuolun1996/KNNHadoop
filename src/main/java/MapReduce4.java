@@ -44,15 +44,6 @@ public class MapReduce4 {
     }
 
     public static class Reduce extends Reducer<IntWritable, Text, IntWritable, Text> {
-        public boolean containsDuplicate(PriorityQueue<PointDistance> pointDistanceList, PointDistance pointDistance) {
-            for (PointDistance _pointDistance : pointDistanceList) {
-                if (pointDistance.getPointId() == _pointDistance.getPointId()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         @Override
         public void reduce(IntWritable pointId, Iterable<Text> knnListTextIterable, Context context)
                 throws IOException, InterruptedException {
@@ -62,19 +53,14 @@ public class MapReduce4 {
             for (Text knnListText : knnListTextIterable) {
                 String knnListString = knnListText.toString();
                 ArrayList<PointDistance> pointDistanceList = Util.knnListStringToKnnList(knnListString);
-                for (PointDistance pointDistance : pointDistanceList) {
-                    if (!containsDuplicate(pointDistanceQueue, pointDistance)) {
-                        pointDistanceQueue.add(pointDistance);
-                        if (pointDistanceQueue.size() > k) {
-                            pointDistanceQueue.poll();
-                        }
-                    }
-                }
+                pointDistanceQueue.addAll(pointDistanceList);
             }
 
-            while (!pointDistanceQueue.isEmpty()) {
+            while (!pointDistanceQueue.isEmpty() && knnList.size() < k) {
                 PointDistance pointDistance = pointDistanceQueue.poll();
-                knnList.add(pointDistance);
+                if (pointDistance.getPointId() != knnList.get(knnList.size() - 1).getPointId()) {
+                    knnList.add(pointDistance);
+                }
             }
 
             context.write(pointId, new Text(knnList.toString()));
