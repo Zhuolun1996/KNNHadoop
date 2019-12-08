@@ -24,9 +24,6 @@ public class KnnMapReduce {
         MapReduce2.run(args);
         MapReduce3.run(args);
         MapReduce4.run(args);
-
-        FileUtil.copyMerge(hdfsFileSystem, new Path("/user/zhl137/knnData/output4/"), localFileSystem, new Path("./knnData/result"), false, knnConf, null);
-
     }
 }
 
