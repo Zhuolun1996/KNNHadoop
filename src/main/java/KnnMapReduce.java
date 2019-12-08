@@ -10,12 +10,12 @@ public class KnnMapReduce {
         knnConf.set("size", "100");
         knnConf.set("grain", "4");
         knnConf.set("k", args[1]);
-        MapReduce1.run(args, knnConf);
+        MapReduce1.run(args);
         CellMerger cellMerger = new CellMerger();
-        HashMap<Integer, HashMap<String, Integer>> cellShape = cellMerger.mergeCell("knnData/output1/part-r-00000", knnConf);
-        MapReduce2.run(args, knnConf, cellShape);
-        MapReduce3.run(args, knnConf, cellShape);
-        MapReduce4.run(args, knnConf, cellShape);
+        HashMap<Integer, HashMap<String, Integer>> cellShape = cellMerger.mergeCell("knnData/output1/part-r-00000");
+        MapReduce2.run(args, cellShape);
+        MapReduce3.run(args, cellShape);
+        MapReduce4.run(args, cellShape);
     }
 }
 

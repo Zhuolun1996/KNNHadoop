@@ -4,11 +4,11 @@ import java.io.*;
 import java.util.HashMap;
 
 public class CellMerger {
-    public HashMap<Integer, HashMap<String, Integer>> mergeCell(String filePath, Configuration conf) {
+    public HashMap<Integer, HashMap<String, Integer>> mergeCell(String filePath) {
         HashMap<Integer, HashMap<String, Integer>> shape = new HashMap<>();
-        int k = Integer.parseInt(conf.get("k"));
-        int size = Integer.parseInt(conf.get("size"));
-        int grain = Integer.parseInt(conf.get("grain"));
+        int k = Integer.parseInt(KnnMapReduce.knnConf.get("k"));
+        int size = Integer.parseInt(KnnMapReduce.knnConf.get("size"));
+        int grain = Integer.parseInt(KnnMapReduce.knnConf.get("grain"));
         int cellWidth = size / grain;
 
         try {
