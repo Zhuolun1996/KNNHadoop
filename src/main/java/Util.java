@@ -4,7 +4,7 @@ import java.util.*;
 public class Util {
     public static class PointDistanceComparator implements Comparator<PointDistance> {
         public int compare(PointDistance p1, PointDistance p2) {
-            return p2.getDistance().compareTo(p1.getDistance());
+            return p1.getDistance().compareTo(p2.getDistance());
         }
     }
 
@@ -26,7 +26,7 @@ public class Util {
             }
         }
 
-        return Util.createKnnListFromHeap(pointDistanceQueue, k);
+        return Util.createKnnListFromQueue(pointDistanceQueue, k);
     }
 
     public static ArrayList<PointDistance> knnListStringToKnnList(String knnListString) {
@@ -61,14 +61,13 @@ public class Util {
         return hashMapObject;
     }
 
-    public static ArrayList<PointDistance> createKnnListFromHeap(PriorityQueue<PointDistance> pointDistanceQueue, int k) {
+    public static ArrayList<PointDistance> createKnnListFromQueue(PriorityQueue<PointDistance> pointDistanceQueue, int k) {
         ArrayList<PointDistance> knnList = new ArrayList<>();
         while (!pointDistanceQueue.isEmpty() && knnList.size() < k) {
             PointDistance pointDistance = pointDistanceQueue.poll();
             if (knnList.size() == 0) {
                 knnList.add(pointDistance);
-            }
-            else if (pointDistance.getPointId() != knnList.get(knnList.size() - 1).getPointId()) {
+            } else if (pointDistance.getPointId() != knnList.get(knnList.size() - 1).getPointId()) {
                 knnList.add(pointDistance);
             }
         }

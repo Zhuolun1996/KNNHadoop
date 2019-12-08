@@ -48,7 +48,6 @@ public class MapReduce4 {
         public void reduce(IntWritable pointId, Iterable<Text> knnListTextIterable, Context context)
                 throws IOException, InterruptedException {
             int k = Integer.parseInt(context.getConfiguration().get("k"));
-            ArrayList<PointDistance> knnList = null;
             PriorityQueue<PointDistance> pointDistanceQueue = new PriorityQueue<>(new Util.PointDistanceComparator());
             for (Text knnListText : knnListTextIterable) {
                 String knnListString = knnListText.toString();
@@ -56,7 +55,7 @@ public class MapReduce4 {
                 pointDistanceQueue.addAll(pointDistanceList);
             }
 
-            knnList = Util.createKnnListFromHeap(pointDistanceQueue, k);
+            ArrayList<PointDistance> knnList = Util.createKnnListFromQueue(pointDistanceQueue, k);
             
             context.write(pointId, new Text(knnList.toString()));
         }
