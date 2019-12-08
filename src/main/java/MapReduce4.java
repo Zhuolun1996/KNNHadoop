@@ -52,11 +52,15 @@ public class MapReduce4 {
             PriorityQueue<PointDistance> pointDistanceQueue = new PriorityQueue<>(new Util.PointDistanceComparator());
             for (Text knnListText : knnListTextIterable) {
                 String knnListString = knnListText.toString();
-                pointDistanceQueue.addAll(Util.knnListStringToKnnList(knnListString));
+                ArrayList<PointDistance> pointDistanceList = Util.knnListStringToKnnList(knnListString);
+                for (PointDistance pointDistance : pointDistanceList) {
+                    pointDistanceQueue.add(pointDistance);
+                    if (pointDistanceQueue.size() > k) {
+                        pointDistanceQueue.poll();
+                    }
+                }
             }
-            while (pointDistanceQueue.size() > k) {
-                pointDistanceQueue.poll();
-            }
+
             while (!pointDistanceQueue.isEmpty()) {
                 PointDistance pointDistance = pointDistanceQueue.poll();
                 knnList.add(pointDistance);
