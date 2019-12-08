@@ -62,7 +62,7 @@ public class MapReduce4 {
                 String knnListString = knnListText.toString();
                 pointDistanceQueue.addAll(Util.knnListStringToKnnList(knnListString));
             }
-            while (pointDistanceQueue.size() > k) {
+            while (pointDistanceQueue.size() > MapReduce4.k) {
                 pointDistanceQueue.poll();
             }
             while (!pointDistanceQueue.isEmpty()) {

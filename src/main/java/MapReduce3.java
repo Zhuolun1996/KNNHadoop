@@ -48,7 +48,7 @@ public class MapReduce3 {
             Float maxDistance = pointInfo.getKnnList().get(0).getDistance();
             ArrayList<Entry<Integer, String>> resultList = new ArrayList<>();
             boolean isOverlapped = false;
-            for (Entry<Integer, HashMap<String, Integer>> cell : cellShape.entrySet()) {
+            for (Entry<Integer, HashMap<String, Integer>> cell : MapReduce3.cellShape.entrySet()) {
                 if ((pointInfo.getX() - maxDistance < cell.getValue().get("rightMargin") && pointInfo.getX() >= cell.getValue().get("rightMargin")) || (pointInfo.getX() + maxDistance >= cell.getValue().get("leftMargin") && pointInfo.getX() < cell.getValue().get("leftMargin"))
                         || (pointInfo.getY() - maxDistance < cell.getValue().get("bottomMargin") && pointInfo.getY() >= cell.getValue().get("bottomMargin")) || (pointInfo.getY() + maxDistance >= cell.getValue().get("topMargin") && pointInfo.getY() < cell.getValue().get("topMargin"))) {
                     resultList.add(new SimpleEntry<>(cell.getKey(), pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY() + ";" + pointInfo.getCellId() + ";" + pointInfo.getKnnList().toString() + ";" + "false"));

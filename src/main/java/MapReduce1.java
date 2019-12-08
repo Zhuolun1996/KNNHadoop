@@ -43,11 +43,11 @@ public class MapReduce1 {
             int x = Integer.parseInt(coordinate.split(",")[1]);
             int y = Integer.parseInt(coordinate.split(",")[2]);
 
-            int cellWidth = size / grain;
+            int cellWidth = MapReduce1.size / MapReduce1.grain;
             int row = y / cellWidth;
             int column = x / cellWidth;
 
-            return new IntWritable(row * grain + column);
+            return new IntWritable(row * MapReduce1.grain + column);
 
         }
 

@@ -47,7 +47,7 @@ public class MapReduce2 {
             int x = Integer.parseInt(coordinate.split(",")[1]);
             int y = Integer.parseInt(coordinate.split(",")[2]);
 
-            for (Entry<Integer, HashMap<String, Integer>> cell : cellShape.entrySet()) {
+            for (Entry<Integer, HashMap<String, Integer>> cell : MapReduce2.cellShape.entrySet()) {
                 if ((cell.getValue().get("leftMargin") < x && cell.getValue().get("rightMargin") >= x) && (cell.getValue().get("topMargin") < y && cell.getValue().get("bottomMargin") >= y)) {
                     return cell.getKey();
                 }
