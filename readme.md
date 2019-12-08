@@ -15,6 +15,12 @@ sh ./run.sh KnnMapReduce {$DataDirectory} {$K}
 # The input dataset should be under {$DataSourceDirectory}/input
 ```
 
+###Get Result of Each Step
+```
+sh ./getResult.sh {i}
+# Result is saved to ./knnData/output{i}Result
+```
+
 ###Example
 ```
 sh ./compile.sh
