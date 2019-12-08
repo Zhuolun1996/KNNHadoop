@@ -39,11 +39,11 @@ public class Util {
     public static ArrayList<PointDistance> knnListStringToKnnList(String knnListString) {
         ArrayList<PointDistance> knnList = new ArrayList<>();
         knnListString = knnListString.replace("[", "").replace("]", "");
-        String[] pairArray = knnListString.split(",");
-        for (String s : pairArray) {
-            String pairString = s.replace(" ", "");
-            int _pointId = Integer.parseInt(pairString.split("=")[0]);
-            float _distance = Float.parseFloat(pairString.split("=")[1]);
+        String[] entryArray = knnListString.split(",");
+        for (String s : entryArray) {
+            String entryString = s.replace(" ", "");
+            int _pointId = Integer.parseInt(entryString.split("=")[0]);
+            float _distance = Float.parseFloat(entryString.split("=")[1]);
             knnList.add(new PointDistance(_pointId, _distance));
         }
 

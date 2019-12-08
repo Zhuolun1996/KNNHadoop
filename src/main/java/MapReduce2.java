@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import javafx.util.Pair;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -35,7 +34,7 @@ public class MapReduce2 {
         Job job = Job.getInstance(conf, "knnMapReduce2");
         job.setJarByClass(MapReduce2.class);
         // Use TextInputFormat, the default unless job.setInputFormatClass is used
-        FileInputFormat.addInputPath(job, new Path(args[0] + "/input1"));
+        FileInputFormat.addInputPath(job, new Path(args[0] + "/input"));
         FileOutputFormat.setOutputPath(job, new Path(args[0] + "/output2"));
         job.setMapperClass(Map.class);
         job.setReducerClass(Reduce.class);

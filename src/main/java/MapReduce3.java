@@ -1,8 +1,8 @@
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.AbstractMap.SimpleEntry;
 
-import javafx.util.Pair;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -46,19 +46,19 @@ public class MapReduce3 {
 
 
     public static class Map extends Mapper<LongWritable, Text, IntWritable, Text> {
-        private ArrayList<Pair<Integer, String>> getValueStringList(PointInfo pointInfo) {
+        private ArrayList<Entry<Integer, String>> getValueStringList(PointInfo pointInfo) {
             Float maxDistance = pointInfo.getKnnList().get(0).getDistance();
-            ArrayList<Pair<Integer, String>> resultList = new ArrayList<>();
+            ArrayList<Entry<Integer, String>> resultList = new ArrayList<>();
             boolean isOverlapped = false;
             for (Entry<Integer, HashMap<String, Integer>> cell : cellShape.entrySet()) {
                 if ((pointInfo.getX() - maxDistance < cell.getValue().get("rightMargin") && pointInfo.getX() >= cell.getValue().get("rightMargin")) || (pointInfo.getX() + maxDistance >= cell.getValue().get("leftMargin") && pointInfo.getX() < cell.getValue().get("leftMargin"))
                         || (pointInfo.getY() - maxDistance < cell.getValue().get("bottomMargin") && pointInfo.getY() >= cell.getValue().get("bottomMargin")) || (pointInfo.getY() + maxDistance >= cell.getValue().get("topMargin") && pointInfo.getY() < cell.getValue().get("topMargin"))) {
-                    resultList.add(new Pair<>(cell.getKey(), pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY() + ";" + pointInfo.getCellId() + ";" + pointInfo.getKnnList().toString() + ";" + "false"));
+                    resultList.add(new SimpleEntry<>(cell.getKey(), pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY() + ";" + pointInfo.getCellId() + ";" + pointInfo.getKnnList().toString() + ";" + "false"));
                     isOverlapped = true;
                 }
             }
             if (!isOverlapped) {
-                resultList.add(new Pair<>(pointInfo.getCellId(), pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY() + ";" + pointInfo.getCellId() + ";" + pointInfo.getKnnList().toString() + ";" + "true"));
+                resultList.add(new SimpleEntry<>(pointInfo.getCellId(), pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY() + ";" + pointInfo.getCellId() + ";" + pointInfo.getKnnList().toString() + ";" + "true"));
             }
             return resultList;
         }
@@ -68,7 +68,7 @@ public class MapReduce3 {
                 throws IOException, InterruptedException {
             String knnInfoString = knnInfoText.toString();
             PointInfo pointInfo = new PointInfo(knnInfoString, 1);
-            for (Pair<Integer, String> value : getValueStringList(pointInfo)) {
+            for (Entry<Integer, String> value : getValueStringList(pointInfo)) {
                 context.write(new IntWritable(value.getKey()), new Text(value.getValue()));
             }
             context.write(new IntWritable(pointInfo.getCellId()), new Text(pointInfo.getPointId() + ";" + pointInfo.getX() + ";" + pointInfo.getY()));

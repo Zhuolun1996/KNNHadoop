@@ -1,10 +1,11 @@
-import javafx.util.Pair;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
 
 public class PointDistance {
-    private Pair<Integer, Float> pointDistance;
+    private Map.Entry<Integer, Float> pointDistance;
 
     public PointDistance(int pointId, float distance) {
-        this.pointDistance = new Pair<>(pointId, distance);
+        this.pointDistance = new SimpleEntry<>(pointId, distance);
     }
 
     public Float getDistance() {
