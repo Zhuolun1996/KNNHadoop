@@ -1,4 +1,6 @@
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 
 import java.util.HashMap;
 
@@ -12,7 +14,10 @@ public class KnnMapReduce {
         knnConf.set("k", args[1]);
         MapReduce1.run(args);
         CellMerger cellMerger = new CellMerger();
-        HashMap<Integer, HashMap<String, Integer>> cellShape = cellMerger.mergeCell("knnData/output1/part-r-00000");
+        knnConf.set("fs.defaultFS", "hdfs://ric-master-01.sci.pitt.edu:8020");
+        FileSystem hdfsFileSystem = FileSystem.get(knnConf);
+        hdfsFileSystem.copyToLocalFile(false, new Path("/user/zhl137/knnData/output1"), new Path("./knnData/output1/output"));
+        HashMap<Integer, HashMap<String, Integer>> cellShape = cellMerger.mergeCell("knnData/output1/output");
         knnConf.set("cellShape", Util.serializeHashMap(cellShape));
         MapReduce2.run(args);
         MapReduce3.run(args);
