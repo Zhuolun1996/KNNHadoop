@@ -20,7 +20,7 @@ public class Util {
             pointDistanceQueue.addAll(pointInfo.getKnnList());
         }
         for (PointInfo otherPointInfo : pointInfoList) {
-            if (!otherPointInfo.getPointId().equals(pointInfo.getPointId())) {
+            if (!(otherPointInfo.getPointId() == pointInfo.getPointId())) {
                 float distance = getDistance(pointInfo, otherPointInfo);
                 PointDistance pointDistance = new PointDistance(otherPointInfo.getPointId(), distance);
                 pointDistanceQueue.add(pointDistance);

@@ -17,9 +17,9 @@ import org.apache.log4j.Logger;
 public class MapReduce4 {
 
     private static final Logger LOG = Logger.getLogger(MapReduce4.class);
-    private static Integer size;
-    private static Integer grain;
-    private static Integer k;
+    private static int size;
+    private static int grain;
+    private static int k;
     private static HashMap<Integer, HashMap<String, Integer>> cellShape;
 
     public static void run(String[] args, HashMap<Integer, HashMap<String, Integer>> shape) throws Exception {

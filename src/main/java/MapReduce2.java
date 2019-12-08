@@ -18,9 +18,9 @@ import org.apache.log4j.Logger;
 public class MapReduce2 {
 
     private static final Logger LOG = Logger.getLogger(MapReduce2.class);
-    private static Integer size;
-    private static Integer grain;
-    private static Integer k;
+    private static int size;
+    private static int grain;
+    private static int k;
     private static HashMap<Integer, HashMap<String, Integer>> cellShape;
 
     public static void run(String[] args, HashMap<Integer, HashMap<String, Integer>> shape) throws Exception {
@@ -43,9 +43,9 @@ public class MapReduce2 {
 
 
     public static class Map extends Mapper<LongWritable, Text, IntWritable, Text> {
-        private Integer getCellIdByCoordinate(String coordinate) {
-            Integer x = Integer.parseInt(coordinate.split(",")[1]);
-            Integer y = Integer.parseInt(coordinate.split(",")[2]);
+        private int getCellIdByCoordinate(String coordinate) {
+            int x = Integer.parseInt(coordinate.split(",")[1]);
+            int y = Integer.parseInt(coordinate.split(",")[2]);
 
             for (Entry<Integer, HashMap<String, Integer>> cell : cellShape.entrySet()) {
                 if ((cell.getValue().get("leftMargin") < x && cell.getValue().get("rightMargin") >= x) && (cell.getValue().get("topMargin") < y && cell.getValue().get("bottomMargin") >= y)) {

@@ -16,8 +16,8 @@ import org.apache.log4j.Logger;
 public class MapReduce1 {
 
     private static final Logger LOG = Logger.getLogger(MapReduce1.class);
-    private static Integer size;
-    private static Integer grain;
+    private static int size;
+    private static int grain;
 
     public static void run(String[] args) throws Exception {
         size = Integer.parseInt(KnnMapReduce.knnConf.get("size"));
@@ -40,12 +40,12 @@ public class MapReduce1 {
         private final static IntWritable one = new IntWritable(1);
 
         public IntWritable getCellIdByCoordinate(String coordinate) {
-            Integer x = Integer.parseInt(coordinate.split(",")[1]);
-            Integer y = Integer.parseInt(coordinate.split(",")[2]);
+            int x = Integer.parseInt(coordinate.split(",")[1]);
+            int y = Integer.parseInt(coordinate.split(",")[2]);
 
-            Integer cellWidth = size / grain;
-            Integer row = y / cellWidth;
-            Integer column = x / cellWidth;
+            int cellWidth = size / grain;
+            int row = y / cellWidth;
+            int column = x / cellWidth;
 
             return new IntWritable(row * grain + column);
 

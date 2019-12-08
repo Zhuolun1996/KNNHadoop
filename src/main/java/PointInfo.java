@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 public class PointInfo {
-    private Integer pointId;
-    private Integer cellId;
-    private Integer x;
-    private Integer y;
+    private int pointId;
+    private int cellId;
+    private int x;
+    private int y;
     private ArrayList<PointDistance> knnList;
 
     public PointInfo(String pointInfoString, int mode) {
@@ -45,19 +45,19 @@ public class PointInfo {
         this.knnList = knnList;
     }
 
-    public Integer getPointId() {
+    public int getPointId() {
         return this.pointId;
     }
 
-    public Integer getCellId() {
+    public int getCellId() {
         return this.cellId;
     }
 
-    public Integer getX() {
+    public int getX() {
         return this.x;
     }
 
-    public Integer getY() {
+    public int getY() {
         return this.y;
     }
 

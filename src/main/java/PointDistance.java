@@ -12,7 +12,7 @@ public class PointDistance {
         return this.pointDistance.getValue();
     }
 
-    public Integer getPointId() {
+    public int getPointId() {
         return this.pointDistance.getKey();
     }
 
