@@ -8,7 +8,7 @@ public class PointDistance {
         this.pointDistance = new SimpleEntry<>(pointId, distance);
     }
 
-    public Float getDistance() {
+    public float getDistance() {
         return this.pointDistance.getValue();
     }
 
