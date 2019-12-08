@@ -1,0 +1,1 @@
+hadoop fs -getmerge knnData/output"$1" ./knnData/output"$1"Result
