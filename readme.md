@@ -1,13 +1,13 @@
-#README
+# README
 
-##Manual
+## Manual
 
-###Compile:
+### Compile:
 ```
 sh ./compile.sh
 ```
 
-###Run:
+### Run:
 ```
 sh ./run.sh KnnMapReduce {$DataDirectory} {$K}
 # Create a directory {$DataDirectory}
@@ -15,16 +15,16 @@ sh ./run.sh KnnMapReduce {$DataDirectory} {$K}
 # The input dataset should be under {$DataSourceDirectory}/input
 ```
 
-###Get Result of Each Step
+### Get Result of Each Step
 ```
 sh ./getResult.sh {i}
 # Result is saved to ./knnData/output{i}Result
 ```
 
-###Example
+### Example
 ```
 sh ./compile.sh
-sh ./run.sh KnnMapReduce ./knnData 2
+sh ./run.sh ./knnData 2
 
 output:
 0       [5=13.0, 43=15.264338]
@@ -79,10 +79,10 @@ output:
 49      [25=5.656854, 40=13.152946]
 ```
 
-###Dataset Path
+### Dataset Path
 ```
 /afs/cs.pitt.edu/usr0/zhl137/public/knnData
 ```
 
-###Result
+### Result
 The result will be saved to `{$DataSourceDirectory}/result`
