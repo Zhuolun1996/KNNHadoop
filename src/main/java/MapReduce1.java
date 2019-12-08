@@ -33,6 +33,13 @@ public class MapReduce1 {
     public static class Map extends Mapper<LongWritable, Text, IntWritable, IntWritable> {
         private final static IntWritable one = new IntWritable(1);
 
+        /**
+         * Get cell id by the data point's coordination.
+         * @param coordinate
+         * @param size
+         * @param grain
+         * @return
+         */
         public IntWritable getCellIdByCoordinate(String coordinate, int size, int grain) {
             int x = Integer.parseInt(coordinate.split(",")[1]);
             int y = Integer.parseInt(coordinate.split(",")[2]);
@@ -45,6 +52,14 @@ public class MapReduce1 {
 
         }
 
+        /**
+         * Map KeyValue Pair (CellId, 1).
+         * @param offset
+         * @param coordinateText
+         * @param context
+         * @throws IOException
+         * @throws InterruptedException
+         */
         @Override
         public void map(LongWritable offset, Text coordinateText, Context context)
                 throws IOException, InterruptedException {
@@ -56,6 +71,15 @@ public class MapReduce1 {
     }
 
     public static class Reduce extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable> {
+        /**
+         * Reduce KeyValue Pair (CellId, 1), count number of points in each cell.
+         * Generate KeyValue Pair (CellId, number of points).
+         * @param cellId
+         * @param counts
+         * @param context
+         * @throws IOException
+         * @throws InterruptedException
+         */
         @Override
         public void reduce(IntWritable cellId, Iterable<IntWritable> counts, Context context)
                 throws IOException, InterruptedException {

@@ -35,6 +35,12 @@ public class MapReduce3 {
 
 
     public static class Map extends Mapper<LongWritable, Text, IntWritable, Text> {
+        /**
+         * Test if there's potential knn points in neighbor cells, and create returning String based on the result.
+         * @param pointInfo
+         * @param cellShape
+         * @return
+         */
         private ArrayList<Entry<Integer, String>> getValueStringList(PointInfo pointInfo, HashMap<Integer, HashMap<String, Integer>> cellShape) {
             Float maxDistance = pointInfo.getKnnList().get(0).getDistance();
             ArrayList<Entry<Integer, String>> resultList = new ArrayList<>();
@@ -52,6 +58,15 @@ public class MapReduce3 {
             return resultList;
         }
 
+        /**
+         * Generate KeyValue Pair (PotentialCellId, (PointId, X, Y, OriginalCellId, boolean)).
+         * Generate KeyValue Pair (CellId, (PointId, X, Y)).
+         * @param offset
+         * @param knnInfoText
+         * @param context
+         * @throws IOException
+         * @throws InterruptedException
+         */
         @Override
         public void map(LongWritable offset, Text knnInfoText, Context context)
                 throws IOException, InterruptedException {
@@ -70,6 +85,17 @@ public class MapReduce3 {
     }
 
     public static class Reduce extends Reducer<IntWritable, Text, IntWritable, Text> {
+        /**
+         * Reduce the KeyValue Pair (PotentialCellId, (PointId, X, Y, OriginalCellId, boolean)) and (CellId, (PointId, X, Y))
+         * Create a list of points in the cell.
+         * Create a minimum heap, add potential points to the heap and get k points with the minimum distance.
+         * Generate KeyValue Pair (PointId, (X, Y, CellId, knnList)).
+         * @param cellId
+         * @param pointInfoIterable
+         * @param context
+         * @throws IOException
+         * @throws InterruptedException
+         */
         @Override
         public void reduce(IntWritable cellId, Iterable<Text> pointInfoIterable, Context context)
                 throws IOException, InterruptedException {

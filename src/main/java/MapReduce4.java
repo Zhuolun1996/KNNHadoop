@@ -33,6 +33,14 @@ public class MapReduce4 {
 
 
     public static class Map extends Mapper<LongWritable, Text, IntWritable, Text> {
+        /**
+         * Generate KeyValue Pair (PointId, knnList).
+         * @param offset
+         * @param knnInfoText
+         * @param context
+         * @throws IOException
+         * @throws InterruptedException
+         */
         @Override
         public void map(LongWritable offset, Text knnInfoText, Context context)
                 throws IOException, InterruptedException {
@@ -44,6 +52,16 @@ public class MapReduce4 {
     }
 
     public static class Reduce extends Reducer<IntWritable, Text, IntWritable, Text> {
+        /**
+         * Create a minimum Heap and add knn points from each potential cell to the heap.
+         * Get knn points from the heap and add to knnList.
+         * Generate KeyValue Pair (PointId, knnList)
+         * @param pointId
+         * @param knnListTextIterable
+         * @param context
+         * @throws IOException
+         * @throws InterruptedException
+         */
         @Override
         public void reduce(IntWritable pointId, Iterable<Text> knnListTextIterable, Context context)
                 throws IOException, InterruptedException {
