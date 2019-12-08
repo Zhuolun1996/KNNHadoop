@@ -67,7 +67,7 @@ public class Util {
             PointDistance pointDistance = pointDistanceQueue.poll();
             if (knnList.size() == 0) {
                 knnList.add(pointDistance);
-            } else if ((pointDistance.getPointId() != knnList.get(knnList.size() - 1).getPointId()) && (pointDistance.getDistance() != knnList.get(knnList.size() - 1).getDistance())) {
+            } else if ((pointDistance.getPointId() != knnList.get(knnList.size() - 1).getPointId()) && !(pointDistance.getDistance().equals(knnList.get(knnList.size() - 1).getDistance()))) {
                 knnList.add(pointDistance);
             }
         }
