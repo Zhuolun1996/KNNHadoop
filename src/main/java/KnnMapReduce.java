@@ -18,7 +18,7 @@ public class KnnMapReduce {
         CellMerger cellMerger = new CellMerger();
         FileSystem hdfsFileSystem = FileSystem.get(knnConf);
         FileSystem localFileSystem = FileSystem.getLocal(new Configuration());
-        FileUtil.copyMerge(hdfsFileSystem, new Path("/user/zhl137/knnData/output1/"), localFileSystem, new Path("./knnData/output1/output"), false, knnConf, null);
+        FileUtil.copyMerge(hdfsFileSystem, new Path("/user/"+ args[2] +"/knnData/output1/"), localFileSystem, new Path("./knnData/output1/output"), false, knnConf, null);
         HashMap<Integer, HashMap<String, Integer>> cellShape = cellMerger.mergeCell("knnData/output1/output");
         knnConf.set("cellShape", Util.serializeHashMap(cellShape));
         MapReduce2.run(args);
