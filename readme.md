@@ -24,7 +24,7 @@ sh ./getResult.sh {i}
 ### Example
 ```
 sh ./compile.sh
-sh ./run.sh ./knnData 2
+sh ./run.sh ./knnData 2 zhl137
 
 output:
 0       [5=13.0, 43=15.264338]
