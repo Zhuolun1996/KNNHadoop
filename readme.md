@@ -9,7 +9,7 @@ sh ./compile.sh
 
 ### Run:
 ```
-sh ./run.sh KnnMapReduce {$DataDirectory} {$K}
+sh ./run.sh KnnMapReduce {$DataDirectory} {$K} {$AFSUserName}
 # Create a directory {$DataDirectory}
 # Need to copy the dataset to a local directroy {$DataDirectory}
 # The input dataset should be under {$DataSourceDirectory}/input
